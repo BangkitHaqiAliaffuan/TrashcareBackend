@@ -22,12 +22,6 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-echo "==> [Railway] Running database migrations..."
-php artisan migrate --force
-
-echo "==> [Railway] Clearing expired cache..."
-php artisan cache:clear
-
 echo "==> [Railway] Starting PHP-FPM in background..."
 php-fpm -D
 
