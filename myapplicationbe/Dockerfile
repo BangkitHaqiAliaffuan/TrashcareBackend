@@ -9,6 +9,7 @@ RUN apk add --no-cache \
     unzip \
     curl \
     libxml2-dev \
+    dos2unix \
     && docker-php-ext-install \
         intl \
         zip \
@@ -31,12 +32,12 @@ RUN composer install --optimize-autoloader --no-dev --no-interaction
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# Fix line endings and make startup script executable
+RUN dos2unix ./railway/init-app.sh && chmod +x ./railway/init-app.sh
+
 # Copy nginx config (Railway-ready, reads PORT at runtime)
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-# Copy startup script
-RUN chmod +x ./railway/init-app.sh
-
 EXPOSE 80
 
-CMD ["./railway/init-app.sh"]
+CMD ["/bin/sh", "./railway/init-app.sh"]
