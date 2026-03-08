@@ -8,17 +8,12 @@ RUN apk add --no-cache \
     zip \
     unzip \
     curl \
-    oniguruma-dev \
     libxml2-dev \
     && docker-php-ext-install \
         intl \
         zip \
         pdo \
         pdo_mysql \
-        mbstring \
-        tokenizer \
-        xml \
-        ctype \
         bcmath
 
 # Install Composer
