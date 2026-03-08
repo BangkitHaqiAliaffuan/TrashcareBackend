@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PickupController;
 use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // ─────────────────────────────────────────────────────────────────
@@ -20,6 +21,16 @@ Route::prefix('auth')->group(function () {
     Route::post('/google',   [AuthController::class, 'googleLogin']);
 });
 
+Route::get('/test-db', function () {
+    try {
+        DB::connection()->getPdo();
+        return response()->json(['status' => 'Database connected']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+//
 // ─────────────────────────────────────────────────────────────────
 // Protected routes (Sanctum Bearer token required)
 // ─────────────────────────────────────────────────────────────────
