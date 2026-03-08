@@ -1,28 +1,47 @@
 FROM php:8.3-fpm-alpine
 
-# Install extensions
+# Install system dependencies and PHP extensions
 RUN apk add --no-cache \
     nginx \
     icu-dev \
     libzip-dev \
     zip \
     unzip \
-    && docker-php-ext-install intl zip pdo pdo_mysql
+    curl \
+    oniguruma-dev \
+    libxml2-dev \
+    && docker-php-ext-install \
+        intl \
+        zip \
+        pdo \
+        pdo_mysql \
+        mbstring \
+        tokenizer \
+        xml \
+        ctype \
+        bcmath
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+# Copy application files
 COPY . .
 
+# Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev --no-interaction
 
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Set permissions
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-# Nginx config
+# Copy nginx config (Railway-ready, reads PORT at runtime)
 COPY docker/nginx.conf /etc/nginx/nginx.conf
+
+# Copy startup script
+RUN chmod +x ./railway/init-app.sh
 
 EXPOSE 80
 
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["./railway/init-app.sh"]

@@ -1,10 +1,31 @@
 providers = ["php"]
 
 [phases.setup]
-nixPkgs = ["php82", "php82Extensions.intl", "php82Extensions.zip", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "composer"]
+nixPkgs = [
+  "php83",
+  "php83Extensions.intl",
+  "php83Extensions.zip",
+  "php83Extensions.pdo",
+  "php83Extensions.pdo_mysql",
+  "php83Extensions.mbstring",
+  "php83Extensions.tokenizer",
+  "php83Extensions.xml",
+  "php83Extensions.ctype",
+  "php83Extensions.fileinfo",
+  "php83Extensions.bcmath",
+  "php83Extensions.curl",
+  "php83Extensions.openssl",
+  "nginx",
+  "composer"
+]
 
 [phases.build]
-cmds = ["composer install --optimize-autoloader --no-dev --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip"]
+cmds = [
+  "composer install --optimize-autoloader --no-dev --no-interaction",
+  "php artisan config:cache",
+  "php artisan route:cache",
+  "php artisan view:cache"
+]
 
 [start]
-cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "chmod +x ./railway/init-app.sh && ./railway/init-app.sh"
