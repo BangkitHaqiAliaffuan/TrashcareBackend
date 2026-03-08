@@ -1,16 +1,13 @@
-FROM php:8.3-apache
+FROM php:8.3-fpm-alpine
 
-# Install system dependencies & PHP extensions
-RUN apt-get update && apt-get install -y \
-    libicu-dev \
+# Install extensions
+RUN apk add --no-cache \
+    nginx \
+    icu-dev \
     libzip-dev \
     zip \
     unzip \
-    git \
-    curl \
-    && docker-php-ext-install intl zip pdo pdo_mysql \
-    && a2dismod mpm_event mpm_worker \
-    && a2enmod mpm_prefork rewrite
+    && docker-php-ext-install intl zip pdo pdo_mysql
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -21,9 +18,11 @@ COPY . .
 
 RUN composer install --optimize-autoloader --no-dev --no-interaction
 
-RUN chown -R www-data:www-data /var/www/html/storage \
-    && chown -R www-data:www-data /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+# Nginx config
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
+
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
