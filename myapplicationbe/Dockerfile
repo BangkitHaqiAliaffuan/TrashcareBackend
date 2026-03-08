@@ -31,8 +31,5 @@ RUN chown -R www-data:www-data /var/www/html/storage \
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
-```
-
----
 
 ### ➕ Buat Juga File Apache Config
