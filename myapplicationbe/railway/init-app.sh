@@ -12,7 +12,7 @@ sed -i "s/__PORT__/$APP_PORT/g" /etc/nginx/nginx.conf
 
 # Ensure storage and cache directories exist and are writable
 mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache 2>/dev/null || true
+chown -R www-data:www-data storage bootstrap/cache public 2>/dev/null || true
 chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
 # Run Laravel optimizations (config/route/view cache already done at build time via nixpacks)
@@ -20,9 +20,8 @@ chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 echo "==> [Railway] Clearing old cache..."
 php artisan optimize:clear
 
-echo "==> [Railway] Caching config..."
+echo "==> [Railway] Caching config and views (NO route cache - Filament incompatible)..."
 php artisan config:cache
-php artisan route:cache
 php artisan view:cache
 
 echo "==> [Railway] Starting PHP-FPM in background..."
