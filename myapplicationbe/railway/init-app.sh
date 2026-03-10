@@ -17,6 +17,9 @@ chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
 # Run Laravel optimizations (config/route/view cache already done at build time via nixpacks)
 # But if .env changes, we re-cache here
+echo "==> [Railway] Clearing old cache..."
+php artisan optimize:clear
+
 echo "==> [Railway] Caching config..."
 php artisan config:cache
 php artisan route:cache
