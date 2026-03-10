@@ -19,6 +19,11 @@ chmod -R 777 storage bootstrap/cache 2>/dev/null || true
 echo "==> [Railway] Clearing old cache..."
 php artisan optimize:clear
 
+echo "==> [Railway] Publishing Filament and Livewire assets..."
+php artisan vendor:publish --tag=livewire:assets --force
+php artisan vendor:publish --tag=filament-assets --force
+php artisan filament:assets
+
 echo "==> [Railway] Caching config and views (NO route cache - Filament incompatible)..."
 php artisan config:cache
 php artisan view:cache
