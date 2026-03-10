@@ -12,8 +12,7 @@ sed -i "s/__PORT__/$APP_PORT/g" /etc/nginx/nginx.conf
 
 # Ensure storage and cache directories exist and are writable
 mkdir -p storage/framework/{sessions,views,cache} storage/logs bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache public 2>/dev/null || true
-chmod -R 775 storage bootstrap/cache 2>/dev/null || true
+chmod -R 777 storage bootstrap/cache 2>/dev/null || true
 
 # Run Laravel optimizations (config/route/view cache already done at build time via nixpacks)
 # But if .env changes, we re-cache here
