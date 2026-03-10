@@ -13,8 +13,8 @@ class AdminSeeder extends Seeder
         $admins = [
             [
                 'name'     => env('ADMIN_NAME', 'Super Admin'),
-                'email'    => env('ADMIN_EMAIL', 'admin@trashcare.com'),
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
+                'email'    => env('ADMIN_EMAIL', 'superadmin@gmail.com'),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'Admin@12345')),
             ],
         ];
 
