@@ -1,0 +1,28 @@
+providers = ["php"]
+
+[phases.setup]
+nixPkgs = [
+  "php83",
+  "php83Extensions.intl",
+  "php83Extensions.zip",
+  "php83Extensions.pdo",
+  "php83Extensions.pdo_mysql",
+  "php83Extensions.mbstring",
+  "php83Extensions.tokenizer",
+  "php83Extensions.xml",
+  "php83Extensions.ctype",
+  "php83Extensions.fileinfo",
+  "php83Extensions.bcmath",
+  "php83Extensions.curl",
+  "php83Extensions.openssl",
+  "nginx",
+  "composer"
+]
+
+[phases.build]
+cmds = [
+  "composer install --optimize-autoloader --no-dev --no-interaction"
+]
+
+[start]
+cmd = "chmod +x ./railway/init-app.sh && ./railway/init-app.sh"
