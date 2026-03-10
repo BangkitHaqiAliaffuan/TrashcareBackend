@@ -10,21 +10,20 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $admins = [
-            [
-                'name'     => env('ADMIN_NAME', 'Super Admin'),
-                'email'    => env('ADMIN_EMAIL', 'superadmin@gmail.com'),
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'Admin@12345')),
-            ],
-        ];
+        $name     = env('ADMIN_NAME', 'Super Admin');
+        $email    = env('ADMIN_EMAIL', 'superadmin@gmail.com');
+        $password = env('ADMIN_PASSWORD', 'Admin@12345');
 
-        foreach ($admins as $data) {
-            Admin::updateOrCreate(
-                ['email' => $data['email']],
-                $data
-            );
-        }
+        // Delete all existing admins and recreate fresh
+        // This avoids stale email conflicts when ADMIN_EMAIL changes
+        Admin::truncate();
 
-        $this->command->info('Admin seeded: ' . env('ADMIN_EMAIL', 'admin@trashcare.com'));
+        Admin::create([
+            'name'     => $name,
+            'email'    => $email,
+            'password' => Hash::make($password),
+        ]);
+
+        $this->command->info("Admin created: {$email}");
     }
 }
